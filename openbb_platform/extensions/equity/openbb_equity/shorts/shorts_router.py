@@ -56,3 +56,28 @@ async def short_interest(
 ) -> OBBject:
     """Get reported short volume and days to cover data."""
     return await OBBject.from_query(Query(**locals()))
+
+
+@router.command(
+    model="ChinaEquityMargin",
+    examples=[APIEx(parameters={"provider": "akshare"})],
+    openapi_extra={
+        "widget_config": {
+            "name": "China Equity Margin Trading",
+            "description": "China A-Share margin trading data (中国两融数据)",
+            "category": "Equity",
+            "search_tags": ["margin", "china", "a-share", "两融"],
+            "type": "table",
+        }
+    },
+)
+async def margin(
+    cc: CommandContext,
+    provider_choices: ProviderChoices,
+    standard_params: StandardParams,
+    extra_params: ExtraParams,
+) -> OBBject:
+    """Get China equity margin trading data (两融数据)."""
+    return await OBBject.from_query(Query(**locals()))
+
+
