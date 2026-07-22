@@ -1,0 +1,8 @@
+{
+  "cache_directory": "~/.openbb_platform/cache",
+  "defaults": {
+    "equity.price.historical": ["yfinance", "cboe"],
+    "equity.fundamental.overview": ["yfinance", "finviz", "sec"],
+    "economy.indicators": ["fred", "federal_reserve", "ecb"]
+  }
+}
