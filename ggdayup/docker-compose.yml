@@ -1,0 +1,57 @@
+name: openbb
+
+services:
+  openbb-platform:
+    build:
+      context: ..
+      dockerfile: ggdayup/Dockerfile
+    container_name: openbb-free-platform
+    restart: always
+    ports:
+      - "6900:6900"
+    environment:
+      - OPENBB_PLATFORM_API_HOST=0.0.0.0
+      - OPENBB_PLATFORM_API_PORT=6900
+    volumes:
+      - ~/.openbb_platform:/root/.openbb_platform
+      - ~/.openbb_data:/root/OpenBBUserData
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:6900/docs || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  openbb-mcp:
+    build:
+      context: ..
+      dockerfile: ggdayup/Dockerfile
+    container_name: openbb-mcp-server
+    restart: always
+    entrypoint: ["openbb-mcp", "--host", "0.0.0.0", "--port", "8001", "--transport", "streamable-http"]
+    ports:
+      - "8001:8001"
+    environment:
+      - OPENBB_PLATFORM_API_HOST=openbb-platform
+      - OPENBB_PLATFORM_API_PORT=6900
+    volumes:
+      - ~/.openbb_platform:/root/.openbb_platform
+      - ~/.openbb_data:/root/OpenBBUserData
+    depends_on:
+      openbb-platform:
+        condition: service_healthy
+
+  openbb-agent-bridge:
+    build:
+      context: ./agent_bridge
+      dockerfile: Dockerfile
+    container_name: openbb-agent-bridge
+    restart: always
+    ports:
+      - "32001:32001"
+    environment:
+      - LITELLM_API_URL=http://host.docker.internal:32000/v1/chat/completions
+      - LITELLM_API_KEY=sk-1234
+      - DEFAULT_MODEL=gemini-3.6-flash
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
