@@ -58,7 +58,7 @@ class AKShareEquityMarginFetcher(
     ) -> DataFrame:
         """Extract margin trading data using AKShare."""
         today = datetime.now().date()
-        start = query.start_date.strftime("%Y%m%d") if query.start_date else (today.replace(day=1)).strftime("%Y%m%d")
+        start = query.start_date.strftime("%Y%m%d") if query.start_date else (today - dt.timedelta(days=365 * 5)).strftime("%Y%m%d")
         end = query.end_date.strftime("%Y%m%d") if query.end_date else today.strftime("%Y%m%d")
 
         try:
