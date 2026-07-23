@@ -13,6 +13,7 @@ services:
       - OPENBB_PLATFORM_API_HOST=0.0.0.0
       - OPENBB_PLATFORM_API_PORT=6900
     volumes:
+      - ..:/app/openbb_source
       - ~/.openbb_platform:/root/.openbb_platform
       - ~/.openbb_data:/root/OpenBBUserData
     healthcheck:
@@ -51,7 +52,7 @@ services:
     environment:
       - LITELLM_API_URL=http://host.docker.internal:32000/v1/chat/completions
       - LITELLM_API_KEY=sk-1234
-      - DEFAULT_MODEL=gemini-3.6-flash
+      - DEFAULT_MODEL=gemma-4-26b-a4b-it
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
